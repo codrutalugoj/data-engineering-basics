@@ -1,0 +1,41 @@
+version: '3'
+
+services: # this has a source and destination database and the elt script
+  source_postgres: 
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    networks:
+      - elt_network
+    environment:
+      - POSTGRES_DATABASE: source_db
+      - POSTGRES_USER: postgres
+      - POSTGRES_PASSWORD: secret
+    volumes:
+      - ./source_db_init/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  destination_postgres: 
+      image: postgres:latest
+      ports:
+        - "5434:5432"
+      networks:
+        - elt_network
+      environment:
+        - POSTGRES_DATABASE: destination_db
+        - POSTGRES_USER: postgres
+        - POSTGRES_PASSWORD: secret
+  
+  elt_script:
+    build:
+      context: ./elt
+      dockerfile: Dockerfile
+    command: ["python", "elt.py"]
+    networks:
+      - elt_network
+    depends_on: # this ensures the script only runs if both databases are up
+      - source_postgres
+      - destination_postgres
+      
+networks:
+  elt_network:
+    driver: bridge
