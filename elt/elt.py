@@ -12,7 +12,7 @@ def wait_for_postgres(host, max_retries=5, delay_seconds=5):
                                     capture_output=True,
                                     text=True)
             print("RESULT", result)
-            if "accept connections" in result.stdout:
+            if "accepting connections" in result.stdout:
                 print("Successfully connected to Postgres")
                 return True
         except subprocess.CalledProcessError as e:

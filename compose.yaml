@@ -6,7 +6,7 @@ services: # this has a source and destination database and the elt script
     networks:
       - elt_network
     environment:
-      POSTGRES_DATABASE: source_db
+      POSTGRES_DB: source_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: secret
     volumes:
@@ -19,7 +19,7 @@ services: # this has a source and destination database and the elt script
       networks:
         - elt_network
       environment:
-        POSTGRES_DATABASE: destination_db
+        POSTGRES_DB: destination_db
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: secret
   
