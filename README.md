@@ -3,9 +3,13 @@ This repo contains the setup for a simple data pipeline. This code is based on t
 Here we build an ELT (extract, load, transform) process using a Python script, Docker containers and PostgreSQL for database management. 
 
 ## Docker compose file:
--  establishes 2 PostgreSQL databases: source, where we get data from and destination, where we want to tranfer the data. 
+- establishes 2 PostgreSQL databases: source, where we get data from and destination, where we want to tranfer the data. 
 - creates the network for the different containers to communicate on
 - creates the volume to persist the data. 
 
-## source_db_init/init.sql
-This is dummy data used in the course. 
+## ELT Script (elt/elt.py)
+- ensures the source database is ready 
+- creates tables and inserts data into the source database
+- loads the data from the source database into the destination database.
+
+
