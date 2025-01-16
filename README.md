@@ -1,6 +1,6 @@
 This repo contains the setup for a simple data pipeline. This code is based on the FreeCodeCamp's Data Engineering [course](https://www.freecodecamp.org/news/learn-the-essentials-of-data-engineering/). 
 
-Here we build an ELT (extract, load, transform) process using a Python script, Docker containers and PostgreSQL for database management. We then use dbt 
+Here we build an ELT (extract, load, transform) process using a Python script, Docker containers and PostgreSQL for database management. We then use dbt to write custom transformations on actor and film data.
 
 # Docker
 - we're creating a Docker compose file
