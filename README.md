@@ -25,13 +25,19 @@ dbt helps with custom transformations on the data we just created + loaded in th
 - a new folder will be created at the location containing analyses, macros, models and a dbt_project.yml. 
     - within the dbt_project.yml, change the materialized param from 'view' to 'table' so the dbt models are persisted in the data warehouse. 
 
-### Building custom dbt models
+### Building custom dbt model
 1. source the data
     - this is simply referencing the tables we have from the destination_db
     - these references are `film_actors.sql`, `actors.sql`, `films.sql`
 2. schema - let's dbt run tests against all written models (i.e. sql files) and checks if the files are within the constraints of the schema
-3. creating the custom model which creates 2 tables and then joins them - `film_ratings.sql`
+3. create the custom model which creates 2 tables and then joins them - `film_ratings.sql`
 
+### Running the dbt model
+- `docker compose up`
+- then checking if the new table film_ratings got created:
+    - `docker exec -it <destination_container_name> psql -U postgres`
+    - connect to database: `\c destination_db`
+    - list all tables: `\dt`.
 
 # Notes:
-- the build would fail when creating the dbt models because of an issue with pg_matviews (See https://github.com/schemaspy/schemaspy/issues/636). Upgrading the Postgres version from 9.2 to 10 for source and destination dbs fixed the issue. 
+- the build initially failed when creating the dbt model because of an issue with pg_matviews (See https://github.com/schemaspy/schemaspy/issues/636). Upgrading the Postgres version from 9.2 to 10 for source and destination dbs fixed the issue. 
