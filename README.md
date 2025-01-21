@@ -39,5 +39,12 @@ dbt helps with custom transformations on the data we just created + loaded in th
     - connect to database: `\c destination_db`
     - list all tables: `\dt`.
 
-# Notes:
+### Notes:
 - the build initially failed when creating the dbt model because of an issue with pg_matviews (See https://github.com/schemaspy/schemaspy/issues/636). Upgrading the Postgres version from 9.2 to 10 for source and destination dbs fixed the issue. 
+
+
+# CRON Job
+- Linux package to run scripts/commands at scheduled times
+- `start.sh` calls the cron daemon in the background and executes the ELT script
+
+# Airflow 
