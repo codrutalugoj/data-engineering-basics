@@ -31,3 +31,7 @@ dbt helps with custom transformations on the data we just created + loaded in th
     - these references are `film_actors.sql`, `actors.sql`, `films.sql`
 2. schema - let's dbt run tests against all written models (i.e. sql files) and checks if the files are within the constraints of the schema
 3. creating the custom model which creates 2 tables and then joins them - `film_ratings.sql`
+
+
+# Notes:
+- the build would fail when creating the dbt models because of an issue with pg_matviews (See https://github.com/schemaspy/schemaspy/issues/636). Upgrading the Postgres version from 9.2 to 10 for source and destination dbs fixed the issue. 

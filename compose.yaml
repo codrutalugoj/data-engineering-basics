@@ -1,6 +1,6 @@
 services: # this has a source and destination database and the elt script
   source_postgres: 
-    image: postgres:9.2
+    image: postgres:10
     ports:
       - "5433:5432"
     networks:
@@ -13,7 +13,7 @@ services: # this has a source and destination database and the elt script
       - ./source_db_init/init.sql:/docker-entrypoint-initdb.d/init.sql
   
   destination_postgres: 
-      image: postgres:9.2
+      image: postgres:10
       ports:
         - "5434:5432"
       networks:
@@ -33,6 +33,27 @@ services: # this has a source and destination database and the elt script
     depends_on: # this ensures the script only runs if both databases are up
       - source_postgres
       - destination_postgres
+
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:latest
+    command:
+      [
+        "run",  # command to run the models on top of data
+        "--profiles-dir",  
+        "/root",
+        "--project-dir",
+        "/dbt"
+      ]
+    networks:
+      - elt_network
+    volumes:
+      - ./custom_postgres:/dbt
+      - ~/.dbt:/root
+    depends_on:
+      - elt_script
+    environment:
+      DBT_PROFILE: custom_postgres
+      DBT_TARGET: dev
       
 networks:
   elt_network:
