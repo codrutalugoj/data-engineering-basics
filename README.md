@@ -48,3 +48,16 @@ dbt helps with custom transformations on the data we just created + loaded in th
 - `start.sh` calls the cron daemon in the background and executes the ELT script
 
 # Airflow 
+Open-source orchestration tool that we can use to programatically schedule and monitor workflows.
+
+### Setup:
+- `airflow.cfg` - config file 
+- Docker compose: add the Airflow services
+    - postgres
+    - init_airflow
+    - webserver
+    - scheduler
+- running the Airflow workflow:
+    - `docker compose up`
+    - note: I have to manually trigger the webserver service from the Docker UI to make sure the server starts
+    - `docker compose down -v` to take down the containers.

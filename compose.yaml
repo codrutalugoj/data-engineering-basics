@@ -23,46 +23,47 @@ services: # this has a source and destination database and the elt script
         POSTGRES_USER: postgres
         POSTGRES_PASSWORD: secret
   
-  elt_script:
-    build:
-      context: ./elt
-      dockerfile: Dockerfile
-    command: ["python", "elt.py"]
-    networks:
-      - elt_network
-    depends_on: # this ensures the script only runs if both databases are up
-      - source_postgres
-      - destination_postgres
+  # elt and dbt services commented out because we have Airflow taking care of them
+  # elt_script:
+  #   build:s
+  #     context: ./elt
+  #     dockerfile: Dockerfile
+  #   command: ["python", "elt.py"]
+  #   networks:
+  #     - elt_network
+  #   depends_on: # this ensures the script only runs if both databases are up
+  #     - source_postgres
+  #     - destination_postgres
 
-  dbt:
-    image: ghcr.io/dbt-labs/dbt-postgres:latest
-    command:
-      [
-        "run",  # command to run the models on top of data
-        "--profiles-dir",  
-        "/root",
-        "--project-dir",
-        "/dbt"
-      ]
-    networks:
-      - elt_network
-    volumes:
-      - ./custom_postgres:/dbt
-      - ~/.dbt:/root
-    depends_on:
-      - elt_script
-    environment:
-      DBT_PROFILE: custom_postgres
-      DBT_TARGET: dev
+  # dbt:
+  #   image: ghcr.io/dbt-labs/dbt-postgres:latest
+  #   command:
+  #     [
+  #       "run",  # command to run the models on top of data
+  #       "--profiles-dir",  
+  #       "/root",
+  #       "--project-dir",
+  #       "/dbt"
+  #     ]
+  #   networks:
+  #     - elt_network
+  #   volumes:
+  #     - ./custom_postgres:/dbt
+  #     - ~/.dbt:/root
+  #   depends_on:
+  #     - elt_script
+  #   environment:
+  #     DBT_PROFILE: custom_postgres
+  #     DBT_TARGET: dev
 
   postgres:
     image: postgres:10
     networks:
       - elt_network
     environment:
-      - POSTGRES_DB: airflow
-      - POSTGRES_USER: airflow
-      - POSTGRES_PASSWORD: airflow
+      POSTGRES_DB: airflow
+      POSTGRES_USER: airflow
+      POSTGRES_PASSWORD: airflow
 
   init-airflow:
     image: apache/airflow:latest
@@ -71,7 +72,7 @@ services: # this has a source and destination database and the elt script
     networks:
       - elt_network
     environment:
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgres+psycopg2://airflow:airflow@postgres/airflow
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
     command: >
       bash -c "airflow db init && airflow users create --username airflow --password password --firstname John --lastname Doe --role Admin --email adin@example.com"
 
@@ -135,9 +136,7 @@ services: # this has a source and destination database and the elt script
       - AIRFLOW_WWW_USER_USERNAME=airflow
       - AIRFLOW_WWW_USER_PASSWORD=password
       - AIRFLOW__WEBSERVER__SECRET_KEY=secret
-    ports:
-      - "8080:8080"
-    command: webserver
+    command: scheduler
       
 networks:
   elt_network:
