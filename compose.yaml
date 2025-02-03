@@ -74,7 +74,7 @@ services: # this has a source and destination database and the elt script
     environment:
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
     command: >
-      bash -c "airflow db init && airflow users create --username airflow --password password --firstname John --lastname Doe --role Admin --email adin@example.com"
+      bash -c "airflow db init && airflow users create --username airflow --password password --firstname John --lastname Doe --role Admin --email admin@example.com"
 
   webserver:
     build:
@@ -122,7 +122,7 @@ services: # this has a source and destination database and the elt script
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./elt:/opt/airflow/elt
-      - ./custom_postgres:/opt/dbt
+      - ./custom_postgres:/dbt
       - ~/.dbt:/root/.dbt
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
@@ -141,3 +141,6 @@ services: # this has a source and destination database and the elt script
 networks:
   elt_network:
     driver: bridge
+
+volumes:
+  destination_db_data:

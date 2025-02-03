@@ -50,7 +50,8 @@ t2 = DockerOperator(
         "--profiles-dir",
         "/root",
         "--project-dir",
-        "/opt/dbt"
+        "/opt/dbt",
+        "--full-refresh"
     ],
     auto_remove=True,
     docker_url="unix://var/run/docker.sock",
